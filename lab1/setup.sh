@@ -85,23 +85,39 @@ chown -R app:app /opt/mywebapp
 
 # Створюємо ізольоване середовище для користувача app
 sudo -u app python3 -m venv /opt/mywebapp/venv
-sudo -u app /opt/mywebapp/venv/bin/pip install -r /opt/mywebapp/requirements.txt
+sudo -u app /opt/mywebapp/venv/bin/pip install -r /opt/mywebapp/requirements.txt gunicorn
 echo "Application environment configured."
 
-echo "=== 6. Systemd configuration ==="
+echo "=== 6. Systemd configuration (Socket Activation) ==="
+
+# Створюємо файл сокета
+cat <<EOF > /etc/systemd/system/mywebapp.socket
+[Unit]
+Description=mywebapp socket
+
+[Socket]
+ListenStream=127.0.0.1:5000
+
+[Install]
+WantedBy=sockets.target
+EOF
+
+# Створюємо оновлений файл сервісу
 cat <<EOF > /etc/systemd/system/mywebapp.service
 [Unit]
 Description=My Web App (Notes Service)
-After=network.target postgresql.service
-Requires=postgresql.service
+Requires=mywebapp.socket postgresql.service
+After=network.target mywebapp.socket postgresql.service
 
 [Service]
 User=app
 Group=app
 WorkingDirectory=/opt/mywebapp
+Environment="HOME=/opt/mywebapp"
 # Обов'язкова вимога: запуск міграції ПЕРЕД стартом сервісу
 ExecStartPre=/opt/mywebapp/venv/bin/python /opt/mywebapp/migration_script_db.py
-ExecStart=/opt/mywebapp/venv/bin/python /opt/mywebapp/app.py
+# Запуск через gunicorn (systemd сам передасть йому сокет)
+ExecStart=/opt/mywebapp/venv/bin/gunicorn app:app
 Restart=always
 
 [Install]
@@ -109,9 +125,10 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-systemctl enable mywebapp.service
-systemctl restart mywebapp.service
-echo "Systemd-сервіс запущено."
+# Зверни увагу: тепер ми вмикаємо і запускаємо саме сокет, а не сервіс
+systemctl enable mywebapp.socket
+systemctl start mywebapp.socket
+echo "Systemd socket activation configured."
 
 echo "=== 7. Nginx configuration (Reverse Proxy) ==="
 cat <<EOF > /etc/nginx/sites-available/mywebapp
