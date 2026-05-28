@@ -18,6 +18,8 @@ echo "=== 2. Creating users ==="
 # Користувач student (з адміністративними правами)
 if ! id "student" &>/dev/null; then
     useradd -m -s /bin/bash -G sudo student
+    echo "student:12345678" | chpasswd
+    chage -d 0 student # Вимагає змінити пароль при першому вході
     echo "Created user: student"
 fi
 
