@@ -125,7 +125,6 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-# Зверни увагу: тепер ми вмикаємо і запускаємо саме сокет, а не сервіс
 systemctl enable mywebapp.socket
 systemctl start mywebapp.socket
 echo "Systemd socket activation configured."
