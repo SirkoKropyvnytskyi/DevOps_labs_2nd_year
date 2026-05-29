@@ -2,11 +2,14 @@ FROM python:3.13-bookworm
 
 WORKDIR /app
 
-# Погана практика: копіюємо весь проєкт одразу
-COPY . .
+# Копіюємо тільки файли із залежностями
+COPY requirements/ requirements/
 
-# Вказуємо правильний шлях до файлу в папці requirements
+# Встановлюємо залежності
 RUN pip install -r requirements/backend.in
+
+# Тепер копіюємо весь інший код
+COPY . .
 
 # Запускаємо застосунок
 CMD ["python", "spaceship/app.py"]

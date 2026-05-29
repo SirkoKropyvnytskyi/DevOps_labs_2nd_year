@@ -5,7 +5,7 @@ from starlette.responses import FileResponse
 from spaceship.config import Settings
 from spaceship.routers import api, health
 
-# Змінено для перевірки кешу в Лабораторній роботі №2
+# Перевірка роботи оптимізованого кешу (швидка збірка, python-app-good)
 
 def make_app(settings: Settings) -> FastAPI:
     app = FastAPI(
