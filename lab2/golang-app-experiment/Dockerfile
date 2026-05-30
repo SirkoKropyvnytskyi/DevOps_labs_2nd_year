@@ -1,16 +1,16 @@
-FROM golang:1.22
-
+# Збірка 
+FROM golang:1.22 AS builder
 WORKDIR /app
-
-# Копіюємо файли із залежностями та завантажуємо їх
 COPY go.mod go.sum ./
 RUN go mod download
-
-# Копіюємо весь інший вихідний код
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /fizzbuzz
 
-# Компілюємо застосунок у бінарний файл з назвою fizzbuzz
-RUN go build -o /fizzbuzz
+# Фінальний образ
+FROM scratch
+# Копіюємо скомпільований файл
+COPY --from=builder /fizzbuzz /fizzbuzz
+# Копіюємо папку з шаблонами
+COPY --from=builder /app/templates /templates
 
-# Запускаємо скомпільований файл (аргумент serve потрібен для запуску веб-сервера)
 CMD [ "/fizzbuzz", "serve" ]
