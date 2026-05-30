@@ -6,8 +6,8 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /fizzbuzz
 
-# Фінальний образ
-FROM scratch
+FROM gcr.io/distroless/static-debian12
+
 # Копіюємо скомпільований файл
 COPY --from=builder /fizzbuzz /fizzbuzz
 # Копіюємо папку з шаблонами
