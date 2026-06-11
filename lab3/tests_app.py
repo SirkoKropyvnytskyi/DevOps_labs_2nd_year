@@ -41,4 +41,3 @@ def test_health_ready_db_down(client):
     response = client.get('/health/ready')
     assert response.status_code == 500
     assert b"Database connection failed" in response.data
-
