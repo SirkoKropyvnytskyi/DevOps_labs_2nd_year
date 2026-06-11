@@ -32,6 +32,7 @@ def test_get_notes_db_down(client):
     assert response.status_code == 500
     assert b"Database connection failed" in response.data or b"DB connection failed" in response.data
 
+
 def test_health_ready_db_down(client):
     """
     Перевіряємо health/ready коли БД недоступна.
@@ -40,3 +41,4 @@ def test_health_ready_db_down(client):
     response = client.get('/health/ready')
     assert response.status_code == 500
     assert b"Database connection failed" in response.data
+
