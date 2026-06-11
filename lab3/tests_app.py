@@ -1,11 +1,13 @@
 import pytest
 from app import app
 
+
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
+
 
 def test_health_alive(client):
     """Перевіряємо, чи живий застосунок"""
@@ -13,11 +15,13 @@ def test_health_alive(client):
     assert response.status_code == 200
     assert b"OK" in response.data
 
+
 def test_index_page(client):
     """Перевіряємо кореневий ендпоінт"""
     response = client.get('/')
     assert response.status_code == 200
     assert b"List of endpoints" in response.data
+
 
 def test_get_notes_db_down(client):
     """
