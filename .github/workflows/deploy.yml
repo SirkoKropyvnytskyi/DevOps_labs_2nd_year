@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - '*'
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  code-analysis-and-tests:
+    name: Linting and Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r lab3/requirements.txt
+
+      - name: Run Flake8 (Linting)
+        run: |
+          cd lab3
+          flake8 app.py tests_app.py --max-line-length=150
+
+      - name: Run Pytest and Coverage
+        run: |
+          cd lab3
+          pytest tests_app.py --cov=app --cov-fail-under=40 --cov-report=xml --cov-report=term
+          
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: lab3/coverage.xml
