@@ -44,6 +44,7 @@ jobs:
       - name: Run Pytest and Coverage
         run: |
           cd lab3
+          echo '{"db_host": "localhost", "db_port": 5432, "db_name": "test", "db_user": "test", "db_password": "123", "app_port": 5000}' > config.json
           pytest tests_app.py --cov=app --cov-fail-under=40 --cov-report=xml --cov-report=term
           
       - name: Upload coverage report
