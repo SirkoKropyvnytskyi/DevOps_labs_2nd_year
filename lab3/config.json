@@ -1,8 +1,0 @@
-{
-    "db_host": "host.docker.internal",
-    "db_port": 5432,
-    "db_name": "notes_db",
-    "db_user": "notes_user",
-    "db_password": "123",
-    "app_port": 5000
-}

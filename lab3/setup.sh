@@ -39,8 +39,14 @@ EOF
 chmod 0440 /etc/sudoers.d/operator
 
 echo "=== 4. Setup DB PostgreSQL ==="
+DB_PASSWORD=$1
+if [ -z "$DB_PASSWORD" ]; then
+    read -s -p "Enter password for notes_user: " DB_PASSWORD
+    echo ""
+fi
+
 sudo -u postgres psql -c "CREATE DATABASE notes_db;" || true
-sudo -u postgres psql -c "CREATE USER notes_user WITH PASSWORD '123';" || true
+sudo -u postgres psql -c "CREATE USER notes_user WITH PASSWORD '${DB_PASSWORD}';" || true
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE notes_db TO notes_user;"
 sudo -u postgres psql -c "ALTER DATABASE notes_db OWNER TO notes_user;"
 
