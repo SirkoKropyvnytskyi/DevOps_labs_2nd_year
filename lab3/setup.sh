@@ -41,7 +41,7 @@ chmod 0440 /etc/sudoers.d/operator
 echo "=== 4. Setup DB PostgreSQL ==="
 DB_PASSWORD=$1
 if [ -z "$DB_PASSWORD" ]; then
-    read -s -p "Enter password for notes_user: " DB_PASSWORD
+    read -r -s -p "Enter password for notes_user: " DB_PASSWORD
     echo ""
 fi
 
