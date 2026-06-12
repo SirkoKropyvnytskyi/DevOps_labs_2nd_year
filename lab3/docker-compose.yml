@@ -6,4 +6,8 @@ services:
     container_name: my_app_container
     ports:
       - "5000:5000"
+    volumes:
+      - ./config.json:/etc/mywebapp/config.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: always

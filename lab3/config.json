@@ -1,5 +1,5 @@
 {
-    "db_host": "db",
+    "db_host": "host.docker.internal",
     "db_port": 5432,
     "db_name": "notes_db",
     "db_user": "notes_user",
