@@ -1,4 +1,4 @@
-import os
+import oos
 import json
 import sys
 import psycopg2
