@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: ghcr.io/${GITHUB_REPOSITORY}:latest
+    image: ghcr.io/${GITHUB_REPOSITORY}:stable
     container_name: my_app_container
     ports:
       - "5000:5000"
