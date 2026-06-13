@@ -27,7 +27,7 @@ if ! id "teacher" &>/dev/null; then
 fi
 
 if ! id "operator" &>/dev/null; then
-    useradd -m -s /bin/bash -g operator operator
+    useradd -m -s /bin/bash -g operator -G docker operator
     echo "operator:12345678" | chpasswd
     chage -d 0 operator
 fi
@@ -63,7 +63,7 @@ systemctl restart postgresql
 
 echo "=== 5. Systemd configuration (Docker Container) ==="
 mkdir -p /home/ubuntu/mywebapp
-chown -R ubuntu:ubuntu /home/ubuntu/mywebapp
+chown -R operator:operator /home/ubuntu/mywebapp
 
 #systemd-unit для управління контейнером
 cat <<EOF > /etc/systemd/system/mywebapp.service
