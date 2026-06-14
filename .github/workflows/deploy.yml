@@ -117,6 +117,8 @@ jobs:
             }
             CONF
             
+            echo "GITHUB_REPOSITORY=${{ github.repository }}" > .env
+
             docker compose pull web
             sudo systemctl restart mywebapp.service
           EOF
