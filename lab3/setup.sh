@@ -75,6 +75,8 @@ After=docker.service postgresql.service network.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+User=operator
+Group=operator
 WorkingDirectory=/home/operator/mywebapp
 
 # Виконуємо міграцію БД перед стартом самого застосунку
