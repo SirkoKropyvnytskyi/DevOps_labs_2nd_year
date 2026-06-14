@@ -117,7 +117,8 @@ jobs:
             }
             CONF
             
-            echo "GITHUB_REPOSITORY=${{ github.repository }}" > .env
+            sed -i 's|\${GITHUB_REPOSITORY}|${{ github.repository }}|g' docker-compose.yml
+            sed -i 's|\$GITHUB_REPOSITORY|${{ github.repository }}|g' docker-compose.yml
 
             docker compose pull web
             sudo systemctl restart mywebapp.service
