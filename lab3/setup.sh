@@ -62,8 +62,8 @@ fi
 systemctl restart postgresql
 
 echo "=== 5. Systemd configuration (Docker Container) ==="
-mkdir -p /home/ubuntu/mywebapp
-chown -R operator:operator /home/ubuntu/mywebapp
+mkdir -p /home/operator/mywebapp
+chown -R operator:operator /home/operator/mywebapp
 
 #systemd-unit для управління контейнером
 cat <<EOF > /etc/systemd/system/mywebapp.service
@@ -75,7 +75,7 @@ After=docker.service postgresql.service network.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/ubuntu/mywebapp
+WorkingDirectory=/home/operator/mywebapp
 
 # Виконуємо міграцію БД перед стартом самого застосунку
 ExecStartPre=/usr/bin/docker compose run --rm web python migration_script_db.py
