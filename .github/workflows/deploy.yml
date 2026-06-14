@@ -99,29 +99,32 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: self-hosted
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy Application via SSH
         env:
           DB_PASS: ${{ secrets.DB_PASSWORD }}
         run: |
+          scp -o StrictHostKeyChecking=no lab3/docker-compose.yml operator@192.168.56.101:/home/operator/mywebapp/
+          
           ssh -o StrictHostKeyChecking=no operator@192.168.56.101 << EOF
-            cd /home/ubuntu/mywebapp
-            
-            cat << CONF > config.json
-            {
-                "db_host": "host.docker.internal",
-                "db_port": 5432,
-                "db_name": "notes_db",
-                "db_user": "notes_user",
-                "db_password": "${DB_PASS}",
-                "app_port": 5000
-            }
-            CONF
-            
-            sed -i 's|\${GITHUB_REPOSITORY}|${{ github.repository }}|g' docker-compose.yml
-            sed -i 's|\$GITHUB_REPOSITORY|${{ github.repository }}|g' docker-compose.yml
+          cd /home/operator/mywebapp
+          
+          echo '{
+              "db_host": "host.docker.internal",
+              "db_port": 5432,
+              "db_name": "notes_db",
+              "db_user": "notes_user",
+              "db_password": "${DB_PASS}",
+              "app_port": 5000
+          }' > config.json
+          
+          sed -i 's|\${GITHUB_REPOSITORY}|${{ github.repository }}|g' docker-compose.yml
+          sed -i 's|\$GITHUB_REPOSITORY|${{ github.repository }}|g' docker-compose.yml
 
-            docker compose pull web
-            sudo systemctl restart mywebapp.service
+          docker compose pull web
+          sudo systemctl restart mywebapp.service
           EOF
 
       - name: Verify Deployment
