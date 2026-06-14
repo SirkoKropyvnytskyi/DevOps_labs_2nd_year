@@ -106,6 +106,10 @@ jobs:
         env:
           DB_PASS: ${{ secrets.DB_PASSWORD }}
         run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          sed -i 's|\${GITHUB_REPOSITORY}|'"$REPO_LOWER"'|g' lab3/docker-compose.yml
+          sed -i 's|\$GITHUB_REPOSITORY|'"$REPO_LOWER"'|g' lab3/docker-compose.yml
+          
           scp -o StrictHostKeyChecking=no lab3/docker-compose.yml operator@192.168.56.101:/home/operator/mywebapp/
           
           ssh -o StrictHostKeyChecking=no operator@192.168.56.101 << EOF
@@ -120,9 +124,6 @@ jobs:
               "app_port": 5000
           }' > config.json
           
-          sed -i 's|\${GITHUB_REPOSITORY}|${{ github.repository }}|g' docker-compose.yml
-          sed -i 's|\$GITHUB_REPOSITORY|${{ github.repository }}|g' docker-compose.yml
-
           docker compose pull web
           sudo systemctl restart mywebapp.service
           EOF
