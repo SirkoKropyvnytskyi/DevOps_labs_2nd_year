@@ -135,7 +135,7 @@ jobs:
           
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://192.168.56.101/)
           
-          if [ "$HTTP_STATUS" -eq 201 ]; then
+          if [ "$HTTP_STATUS" -eq 200 ]; then
             echo "Verification successful: Service returned 200 OK!"
             exit 0
           else
