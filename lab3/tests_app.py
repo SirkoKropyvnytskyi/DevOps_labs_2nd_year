@@ -29,7 +29,7 @@ def test_get_notes_db_down(client):
     Оскільки під час тестів БД не піднята, він має віддати помилку 500.
     """
     response = client.get('/notes')
-    assert response.status_code == 200
+    assert response.status_code == 500
     assert b"Database connection failed" in response.data or b"DB connection failed" in response.data
 
 
