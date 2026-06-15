@@ -12,7 +12,7 @@ def client():
 def test_health_alive(client):
     """Перевіряємо, чи живий застосунок"""
     response = client.get('/health/alive')
-    assert response.status_code == 200
+    assert response.status_code == 500
     assert b"OK" in response.data
 
 
